@@ -206,4 +206,16 @@ def get_sentinel1_data(latitude: float, longitude: float):
 
     response.raise_for_status()
 
-    return response.content
+    return {
+    "status": "success",
+    "source": "Sentinel-1",
+    "location": {
+        "latitude": latitude,
+        "longitude": longitude
+    },
+    "data": {
+        "received": True,
+        "format": "TIFF",
+        "size_bytes": len(response.content)
+    }
+}
