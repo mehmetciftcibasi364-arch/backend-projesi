@@ -2,7 +2,7 @@ import requests
 from fastapi import FastAPI
 from decision_engine import make_decision
 from database import create_database, save_sensor_data, get_sensor_data
-from sentinel_service import get_sentinel_data
+from sentinel_service import get_sentinel_data, get_sentinel1_data
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
     title="Backend API",
@@ -133,3 +133,6 @@ def get_decision():
 @app.get("/api/sentinel")
 def sentinel_data(latitude: float, longitude: float):
     return get_sentinel_data(latitude, longitude)
+@app.get("/api/sentinel1")
+def sentinel1_data(latitude: float, longitude: float):
+    return get_sentinel1_data(latitude, longitude)
