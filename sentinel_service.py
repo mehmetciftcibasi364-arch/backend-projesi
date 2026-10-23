@@ -210,6 +210,8 @@ def get_sentinel1_data(latitude: float, longitude: float):
     tiff_data = tifffile.imread(io.BytesIO(response.content))
     vv = float(tiff_data[0, 0, 0])
     vh = float(tiff_data[0, 0, 1])      
+    ratio = vh / vv if vv != 0 else 0
+    radar_index = round(ratio, 3)
 
     return {
     "status": "success",
@@ -223,6 +225,7 @@ def get_sentinel1_data(latitude: float, longitude: float):
     "format": "TIFF",
     "size_bytes": len(response.content),
     "vv": vv,
-    "vh": vh
+    "vh": vh,
+    "radar_index": radar_index
 }
 }
