@@ -1,5 +1,7 @@
 import requests
 import os
+import io
+import tifffile
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,7 +20,7 @@ def get_access_token():
 
     response = requests.post(url, data=data)
     response.raise_for_status()
-
+   
     return response.json()["access_token"]
 def get_ndvi(latitude: float, longitude: float):
     token = get_access_token()
@@ -103,7 +105,7 @@ def get_ndvi(latitude: float, longitude: float):
     )
 
     response.raise_for_status()
-
+    
     return response.json()
     
 def get_sentinel_data(latitude: float, longitude: float):
@@ -205,6 +207,9 @@ def get_sentinel1_data(latitude: float, longitude: float):
     )
 
     response.raise_for_status()
+    tiff_data = tifffile.imread(io.BytesIO(response.content))
+    vv = float(tiff_data[0, 0, 0])
+    vh = float(tiff_data[0, 0, 1])      
 
     return {
     "status": "success",
@@ -213,9 +218,11 @@ def get_sentinel1_data(latitude: float, longitude: float):
         "latitude": latitude,
         "longitude": longitude
     },
-    "data": {
-        "received": True,
-        "format": "TIFF",
-        "size_bytes": len(response.content)
-    }
+  "data": {
+    "received": True,
+    "format": "TIFF",
+    "size_bytes": len(response.content),
+    "vv": vv,
+    "vh": vh
+}
 }
