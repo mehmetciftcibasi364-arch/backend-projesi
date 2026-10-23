@@ -3,9 +3,21 @@ from fastapi import FastAPI
 from decision_engine import make_decision
 from database import create_database, save_sensor_data, get_sensor_data
 from sentinel_service import get_sentinel_data
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
     title="Backend API",
     version="1.0.0"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://arhatb.github.io",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 create_database()
 @app.get("/")
